@@ -11,13 +11,13 @@ public class WhioMaintenanceSheetConverter {
 			try {
 
 				File input = new File(args[0]);
-				
+
 				Converter.convertFile(input);
 
 				System.out.println("conversion successful.\n");
 
 			} catch (Exception any) {
-				System.out.println("something was wrong with the given input.\n" + HELP_TEXT);
+				System.out.println("something was wrong with the given input.\n");
 				System.out.println(any.getMessage());
 			}
 

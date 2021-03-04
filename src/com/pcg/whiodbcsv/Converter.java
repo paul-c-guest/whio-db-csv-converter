@@ -1,10 +1,19 @@
 package com.pcg.whiodbcsv;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.pcg.whiodbcsv.io.HTML;
+import com.pcg.whiodbcsv.map.Area;
+import com.pcg.whiodbcsv.map.Line;
+import com.pcg.whiodbcsv.map.MaintenanceMap;
+import com.pcg.whiodbcsv.map.Status;
+import com.pcg.whiodbcsv.map.Trap;
 
 /**
  * static collection of methods for purpose of converting provided CSV files to
@@ -21,7 +30,9 @@ public class Converter {
 
 	/**
 	 * For conversion of a whio database csv file to a readable collection of
-	 * maintenance requirements for the relevant trap locations.
+	 * maintenance requirements for the relevant trap locations. <br>
+	 * Places the new converted file at the same directory that the target file is
+	 * in.
 	 * 
 	 * @param input a CSV file exported from the Whio trap database
 	 * @return a boolean reporting the success of the conversion
@@ -30,28 +41,83 @@ public class Converter {
 		if (!input.isFile())
 			return false;
 
-		try (Scanner reader = new Scanner(input);
+		try (Scanner reader = new Scanner(input);) {
 
-		) {
-
-			File output = new File(getNewPath(input));
-			
-			// delete file if already present
-			if (output.exists()) {
-				output.delete();
-			}
-			output.createNewFile(); 
+			MaintenanceMap mmap = new MaintenanceMap();
 
 			while (reader.hasNextLine()) {
 				String[] line = parseLine(reader.nextLine());
+				String status = line[8].toLowerCase();
+
+				if (status.contains("not"))
+					put(mmap, line, Status.NOT_FUNCTIONING);
+				else if (status.contains("maintenance"))
+					put(mmap, line, Status.FUNCTIONING);
+				else if (status.contains("missing"))
+					put(mmap, line, Status.MISSING);
 			}
 
+			File target = new File(getPathForConversion(input));
+
+			if (target.exists()) {
+				target.delete();
+			}
+
+			target.createNewFile();
+
+			writeFile(target, mmap);
+
+			return true;
+
 		} catch (IOException io) {
-			return false;
 		}
 
 		return false;
 
+	}
+
+	/**
+	 * create the maintenance sheet file from the supplied MaintenanceMap
+	 * 
+	 * @param file
+	 */
+	private static void writeFile(File file, MaintenanceMap mmap) {
+
+		try (PrintWriter writer = new PrintWriter(file);)
+
+		{
+			writer.println(HTML.fileHeader(mmap.getPrimaryAreaName()));
+
+			for (Area area : mmap.getAreas()) {
+				writer.println(HTML.heading2(area.getAreaName()));
+
+				for (Line line : area.getLines()) {
+					writer.println(HTML.bold(line.getLineName()) + "<br>");
+
+					for (Trap trap : line.getTraps()) {
+						writer.println(trap.toHTMLString() + "<br>");
+
+					}
+					
+					// space after each line grouping
+					writer.println("<br>");
+				} 
+			}
+
+			writer.println(HTML.fileCloser());
+
+		} catch (FileNotFoundException e) {
+
+		}
+	}
+
+	private static void put(MaintenanceMap mmap, String[] record, Status status) {
+
+		Area area = new Area(record[2]);
+		Line line = new Line(record[3]);
+		Trap trap = new Trap(record[4], status, record[9], record[11]);
+
+		mmap.addArea(area).addLine(line).addTrap(trap);
 	}
 
 	/**
@@ -77,7 +143,7 @@ public class Converter {
 		char[] chars = line.toCharArray();
 
 		for (int i = 0; i < chars.length; i++) {
-			
+
 			switch (chars[i]) {
 
 			case '"':
@@ -102,7 +168,7 @@ public class Converter {
 				break;
 			}
 		}
-		
+
 //		System.out.println(element.toString());
 		list.add(element.toString()); // add last element after routine breaks out
 
@@ -113,7 +179,7 @@ public class Converter {
 	 * get a path for the converted file to create (or overwrite). this will make
 	 * the new file in the directory that the csv file resides in.
 	 */
-	private static String getNewPath(File input) throws IOException {
+	private static String getPathForConversion(File input) throws IOException {
 		String inPath = input.getCanonicalPath();
 
 		// trim file type extension
@@ -126,7 +192,7 @@ public class Converter {
 
 //		System.out.println(inPath);
 
-		return inPath + ".txt";
+		return inPath + ".html";
 	}
 
 }

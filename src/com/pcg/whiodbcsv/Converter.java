@@ -12,6 +12,7 @@ import com.pcg.whiodbcsv.io.HTML;
 import com.pcg.whiodbcsv.map.Area;
 import com.pcg.whiodbcsv.map.Line;
 import com.pcg.whiodbcsv.map.MaintenanceMap;
+import com.pcg.whiodbcsv.map.MaintenanceStatus;
 import com.pcg.whiodbcsv.map.Status;
 import com.pcg.whiodbcsv.map.Trap;
 
@@ -50,11 +51,11 @@ public class Converter {
 				String status = line[8].toLowerCase();
 
 				if (status.contains("not"))
-					put(mmap, line, Status.NOT_FUNCTIONING);
+					put(mmap, line, MaintenanceStatus.NOT_FUNCTIONING);
 				else if (status.contains("maintenance"))
-					put(mmap, line, Status.FUNCTIONING);
+					put(mmap, line, MaintenanceStatus.FUNCTIONING);
 				else if (status.contains("missing"))
-					put(mmap, line, Status.MISSING);
+					put(mmap, line, MaintenanceStatus.MISSING);
 			}
 
 			File target = new File(getPathForConversion(input));
@@ -94,8 +95,13 @@ public class Converter {
 				for (Line line : area.getLines()) {
 					writer.println(HTML.bold(line.getLineName()) + "<br>");
 
-					for (Trap trap : line.getTraps()) {
-						writer.println(trap.toHTMLString() + "<br>");
+					for (Status status : line.getStatuses()) {
+						writer.println(status.getDescriptiveName() + "<br>");
+						
+						for (Trap trap : status.getTraps()) {
+							writer.println(trap.toHTMLString() + "<br>");
+							
+						}
 
 					}
 					
@@ -111,13 +117,14 @@ public class Converter {
 		}
 	}
 
-	private static void put(MaintenanceMap mmap, String[] record, Status status) {
+	private static void put(MaintenanceMap mmap, String[] record, MaintenanceStatus maintenanceStatus) {
 
 		Area area = new Area(record[2]);
 		Line line = new Line(record[3]);
-		Trap trap = new Trap(record[4], status, record[9], record[11]);
+		Status status = new Status(maintenanceStatus);
+		Trap trap = new Trap(record[4], record[9], record[11]);
 
-		mmap.addArea(area).addLine(line).addTrap(trap);
+		mmap.addArea(area).addLine(line).addStatus(status).addTrap(trap);
 	}
 
 	/**

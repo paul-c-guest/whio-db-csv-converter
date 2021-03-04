@@ -29,8 +29,7 @@ public class Area {
 	}
 
 	public List<Line> getLines() {
-		List<Line> list = new ArrayList<Line>(lines.values());
-		return list;
+		return new ArrayList<>(lines.values());
 	}
 	public String getAreaName() {
 		return areaName;

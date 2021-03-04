@@ -8,24 +8,24 @@ import java.util.TreeMap;
 public class Line implements Comparable<Line> {
 
 	String lineName;
-	Map<String, Trap> traps;
+	Map<String, Status> statuses;
 
 	private Line() {
 	}
 
 	public Line(String line) {
 		lineName = line;
-		traps = new TreeMap<>();
+		statuses = new TreeMap<>();
 	}
 
-	public void addTrap(Trap trap) {
-		if (!traps.containsKey(trap.trapName))
-			traps.put(trap.trapName, trap);
+	public Status addStatus(Status status) {
+		if (!statuses.containsKey(status.getEnumName()))
+			statuses.put(status.getEnumName(), status);
+		return statuses.get(status.getEnumName());
 	}
 
-	public List<Trap> getTraps() {
-		List<Trap> list = new ArrayList<Trap>(traps.values());
-		return list;
+	public List<Status> getStatuses() {
+		return new ArrayList<>(statuses.values());
 	}
 	
 	public String getLineName() {

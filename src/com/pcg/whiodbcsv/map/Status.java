@@ -1,28 +1,40 @@
 package com.pcg.whiodbcsv.map;
 
-public enum Status {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-	FUNCTIONING {
-		@Override
-		String fullString() {
-			return "Still functional";
-		}
-	},
-
-	NOT_FUNCTIONING {
-		@Override
-		String fullString() {
-			return "Not functional";
-		}
-	},
-
-	MISSING {
-		@Override
-		String fullString() {
-			return "Missing";
-		}
-	};
-
-	abstract String fullString();
-
+public class Status {
+	
+	MaintenanceStatus status;
+	Map<String, Trap> traps;
+	
+	public Status(MaintenanceStatus status) {
+		this.status = status;
+		traps = new TreeMap<>();
+	}
+	
+	public String getEnumName() {
+		return status.toString();
+	}
+	
+	public String getDescriptiveName() {
+		return status.fullString();
+	}
+	
+	public Trap addTrap(Trap trap) {
+		if (!traps.containsKey(trap.trapName))
+			traps.put(trap.trapName, trap);
+		return traps.get(trap.trapName);
+	}
+	
+	public Trap getTrap(String trapName) {
+		return traps.get(trapName);
+	}
+	
+	public List<Trap> getTraps() {
+		return new ArrayList<>(traps.values());
+	}
+	
 }

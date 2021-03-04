@@ -28,8 +28,7 @@ public class MaintenanceMap {
 	}
 
 	public List<Area> getAreas() {
-		List<Area> list = new ArrayList<Area>(areas.values());
-		return list;
+		return new ArrayList<>(areas.values());
 	}
 	
 	public String getPrimaryAreaName() {

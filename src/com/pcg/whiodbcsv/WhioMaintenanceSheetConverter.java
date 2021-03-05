@@ -17,8 +17,7 @@ public class WhioMaintenanceSheetConverter {
 				System.out.println("conversion successful.\n");
 
 			} catch (Exception any) {
-				System.out.println("something was wrong with the given input.\n");
-				System.out.println(any.getMessage());
+				any.printStackTrace();
 			}
 
 		} else {

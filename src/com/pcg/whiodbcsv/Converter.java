@@ -25,7 +25,7 @@ import com.pcg.whiodbcsv.map.Trap;
  */
 public class Converter {
 
-	// disallow creation of Converter as an object
+	// block public access to no-arg constructor
 	private Converter() {
 	}
 
@@ -47,15 +47,22 @@ public class Converter {
 			MaintenanceMap mmap = new MaintenanceMap();
 
 			while (reader.hasNextLine()) {
-				String[] line = parseLine(reader.nextLine());
-				String status = line[8].toLowerCase();
+				
+				String line = reader.nextLine();
+
+				// solve problem caused by empty quoted comment being split across two lines 
+				if (line.charAt(line.length() - 1) == '"')
+					line += reader.nextLine();
+				
+				String[] values = parseLine(line);
+				String status = values[8].toLowerCase();
 
 				if (status.contains("not"))
-					put(mmap, line, MaintenanceStatus.NOT_FUNCTIONING);
+					put(mmap, values, MaintenanceStatus.NOT_FUNCTIONING);
 				else if (status.contains("maintenance"))
-					put(mmap, line, MaintenanceStatus.FUNCTIONING);
+					put(mmap, values, MaintenanceStatus.FUNCTIONING);
 				else if (status.contains("missing"))
-					put(mmap, line, MaintenanceStatus.MISSING);
+					put(mmap, values, MaintenanceStatus.MISSING);
 			}
 
 			File target = new File(getPathForConversion(input));

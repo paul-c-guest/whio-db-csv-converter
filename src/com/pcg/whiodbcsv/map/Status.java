@@ -20,7 +20,11 @@ public class Status {
 	}
 
 	public String getDescriptiveName() {
-		return status.fullString();
+		return status.descriptiveString();
+	}
+
+	public int getEnumOrdinal() {
+		return status.ordinal();
 	}
 
 	public Trap addTrap(Trap trap) {

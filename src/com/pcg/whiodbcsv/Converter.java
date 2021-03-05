@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.pcg.whiodbcsv.io.HTML;
+import com.pcg.whiodbcsv.html.HTML;
 import com.pcg.whiodbcsv.map.Area;
 import com.pcg.whiodbcsv.map.Line;
 import com.pcg.whiodbcsv.map.MaintenanceMap;
@@ -47,13 +47,13 @@ public class Converter {
 			MaintenanceMap mmap = new MaintenanceMap();
 
 			while (reader.hasNextLine()) {
-				
+
 				String line = reader.nextLine();
 
-				// solve problem caused by empty quoted comment being split across two lines 
+				// solve problem caused by empty quoted comment being split across two lines
 				if (line.charAt(line.length() - 1) == '"')
 					line += reader.nextLine();
-				
+
 				String[] values = parseLine(line);
 				String status = values[8].toLowerCase();
 
@@ -100,21 +100,21 @@ public class Converter {
 				writer.println(HTML.heading2(area.getAreaName()));
 
 				for (Line line : area.getLines()) {
-					writer.println(HTML.bold(line.getLineName()) + "<br>");
+					writer.println(HTML.bold(line.getLineName().toUpperCase()) + "<br>");
 
 					for (Status status : line.getStatuses()) {
-						writer.println(status.getDescriptiveName() + "<br>");
-						
+						writer.println(HTML.bold(status.getDescriptiveName() + "<br>"));
+
 						for (Trap trap : status.getTraps()) {
 							writer.println(trap.toHTMLString() + "<br>");
-							
+
 						}
 
 					}
-					
+
 					// space after each line grouping
 					writer.println("<br>");
-				} 
+				}
 			}
 
 			writer.println(HTML.fileCloser());

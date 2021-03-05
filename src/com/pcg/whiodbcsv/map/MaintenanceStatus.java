@@ -4,25 +4,25 @@ public enum MaintenanceStatus {
 
 	FUNCTIONING {
 		@Override
-		public String fullString() {
-			return "Still functional";
+		public String descriptiveString() {
+			return "Still functioning";
 		}
 	},
 
 	NOT_FUNCTIONING {
 		@Override
-		public String fullString() {
-			return "Not functional";
+		public String descriptiveString() {
+			return "Not functioning";
 		}
 	},
 
 	MISSING {
 		@Override
-		public String fullString() {
+		public String descriptiveString() {
 			return "Missing";
 		}
 	};
 
-	abstract String fullString();
+	abstract String descriptiveString();
 
 }

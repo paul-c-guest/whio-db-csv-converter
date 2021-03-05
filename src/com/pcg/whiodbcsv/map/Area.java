@@ -31,6 +31,7 @@ public class Area {
 	public List<Line> getLines() {
 		return new ArrayList<>(lines.values());
 	}
+
 	public String getAreaName() {
 		return areaName;
 	}

@@ -8,7 +8,7 @@ import java.util.TreeMap;
 public class Line implements Comparable<Line> {
 
 	String lineName;
-	Map<String, Status> statuses;
+	Map<Integer, Status> statuses;
 
 	private Line() {
 	}
@@ -19,15 +19,15 @@ public class Line implements Comparable<Line> {
 	}
 
 	public Status addStatus(Status status) {
-		if (!statuses.containsKey(status.getEnumName()))
-			statuses.put(status.getEnumName(), status);
-		return statuses.get(status.getEnumName());
+		if (!statuses.containsKey(status.getEnumOrdinal()))
+			statuses.put(status.getEnumOrdinal(), status);
+		return statuses.get(status.getEnumOrdinal());
 	}
 
 	public List<Status> getStatuses() {
 		return new ArrayList<>(statuses.values());
 	}
-	
+
 	public String getLineName() {
 		return lineName;
 	}

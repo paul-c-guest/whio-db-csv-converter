@@ -12,7 +12,7 @@ public class Trap implements Comparable<Trap> {
 	public Trap(String trapID, String comment, String trapType) {
 		this.trapName = trapID;
 		this.trapType = trapType;
-		
+
 		if (comment.equals("N/A"))
 			this.comment = "";
 		else

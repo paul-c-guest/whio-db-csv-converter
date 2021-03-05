@@ -30,7 +30,7 @@ public class MaintenanceMap {
 	public List<Area> getAreas() {
 		return new ArrayList<>(areas.values());
 	}
-	
+
 	public String getPrimaryAreaName() {
 		int highest = 0;
 		String valley = null;

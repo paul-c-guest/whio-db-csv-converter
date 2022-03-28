@@ -37,8 +37,11 @@ public class HTML {
 	}
 
 	public static String fileHeader(String title) {
-		return "<!DOCTYPE html>\n" + "<html>\n" + "<head>\n" + "<meta charset=\"UTF-8\">\n" + "<title>" + title
-				+ "</title>\n" + "</head>\n" + "<body>";
+		String charSetTag = "<meta charset=\"UTF-8\">\n";
+		String titleTag = "<title>" + title + "</title>\n";
+		String styleTag = "<link rel=\"stylesheet\" href=\"css.css\">\n";
+
+		return "<!DOCTYPE html>\n" + "<html>\n" + "<head>\n" + charSetTag + titleTag + styleTag + "</head>\n" + "<body>";
 	}
 
 	public static String fileHeader() {

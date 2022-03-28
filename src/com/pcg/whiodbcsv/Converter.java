@@ -109,10 +109,9 @@ public class Converter {
 							writer.println(trap.toHTMLString() + "<br>");
 
 						}
-
 					}
 
-					// space after each line grouping
+					// additional break after each line grouping
 					writer.println("<br>");
 				}
 			}
